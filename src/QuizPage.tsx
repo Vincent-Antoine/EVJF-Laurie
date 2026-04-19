@@ -360,7 +360,7 @@ export default function QuizPage() {
           )}
           {mailStatus === "sent" && (
             <p style={{ margin: "1rem 0 0", fontSize: "0.95rem", color: "var(--evjf-muted)" }}>
-              Le détail de ta partie a été envoyé par e-mail.
+              Le détail de ta partie a été envoyé par e-mail à tes superbes témoins.
             </p>
           )}
           {mailStatus === "error" && (
