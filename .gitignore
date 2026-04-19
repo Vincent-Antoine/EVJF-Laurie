@@ -1,0 +1,20 @@
+# Dépendances
+node_modules/
+
+# Build
+dist/
+
+# Variables d’environnement locales (ne pas committer)
+.env
+.env.local
+.env.*.local
+
+# Logs & OS
+*.log
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/*
+!.vscode/extensions.json

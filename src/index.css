@@ -1,0 +1,37 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root {
+  --evjf-bg: #f2f2f4;
+  --evjf-text: #1d1d1f;
+  --evjf-muted: #6e6e73;
+  --evjf-card: #ffffff;
+  --evjf-border: #d8d8dd;
+  --evjf-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+  --evjf-accent: #3a3a3c;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Montserrat", system-ui, sans-serif;
+  background: var(--evjf-bg);
+  color: var(--evjf-text);
+  overflow-x: hidden;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+button {
+  font-family: inherit;
+}
