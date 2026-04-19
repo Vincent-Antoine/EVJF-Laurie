@@ -201,7 +201,7 @@ export default function QuizPage() {
             color: "var(--evjf-text)",
           }}
         >
-          Qu'as-tu compris de nos petites histoire contées par mail ces dernières semaines ?{" "}
+          Qu'as-tu compris de nos petites histoires contées par mail ces dernières semaines ?{" "}
         </div>
         <p
           style={{
