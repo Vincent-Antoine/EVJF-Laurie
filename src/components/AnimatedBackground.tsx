@@ -1,5 +1,5 @@
 import { motion, motionValue, useAnimationFrame } from "framer-motion";
-import type { MotionValue } from "framer-motion";
+import type { HTMLMotionProps, MotionValue } from "framer-motion";
 import type { CSSProperties } from "react";
 import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
 
@@ -420,23 +420,91 @@ export function AnimatedBackground() {
         zIndex: 0,
         overflow: "hidden",
         pointerEvents: "none",
-        opacity: 0.92,
         isolation: "isolate",
       }}
     >
-      {placements.map(({ src, zone, index }) => (
-        <FaceBlob
-          key={`${index}-${src}-${zone.top}-${zone.left}`}
-          src={src}
-          zone={zone}
-          index={index}
-          phys={physRef.current![index]}
-          onAnchorLayout={setAnchorLayout}
-        />
-      ))}
+      {/* Blobs d’angle + cadre (tons pêche / corail / rose plus marqués) */}
+      <div
+        style={{
+          position: "absolute",
+          top: "-14%",
+          left: "-10%",
+          width: "min(56vw, 460px)",
+          height: "min(56vw, 460px)",
+          background:
+            "radial-gradient(ellipse 70% 65% at 42% 38%, rgba(255, 150, 130, 0.85) 0%, rgba(255, 190, 200, 0.5) 48%, transparent 72%)",
+          filter: "blur(2px)",
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          bottom: "-12%",
+          right: "-8%",
+          width: "min(62vw, 500px)",
+          height: "min(62vw, 500px)",
+          background:
+            "radial-gradient(ellipse 68% 62% at 58% 52%, rgba(255, 160, 175, 0.82) 0%, rgba(255, 200, 180, 0.42) 52%, transparent 74%)",
+          filter: "blur(2px)",
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          top: "-6%",
+          right: "-12%",
+          width: "min(48vw, 380px)",
+          height: "min(48vw, 380px)",
+          background:
+            "radial-gradient(ellipse 65% 60% at 55% 40%, rgba(255, 120, 100, 0.55) 0%, rgba(255, 200, 160, 0.35) 55%, transparent 70%)",
+          filter: "blur(3px)",
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          bottom: "-4%",
+          left: "-14%",
+          width: "min(50vw, 400px)",
+          height: "min(50vw, 400px)",
+          background:
+            "radial-gradient(ellipse 62% 58% at 35% 60%, rgba(255, 130, 150, 0.5) 0%, rgba(255, 210, 190, 0.32) 56%, transparent 72%)",
+          filter: "blur(3px)",
+        }}
+      />
+      <div
+        className="evjf-floating-faces"
+        style={{
+          position: "absolute",
+          inset: 0,
+          zIndex: 1,
+          opacity: 0.97,
+        }}
+      >
+        {placements.map(({ src, zone, index }) => (
+          <FaceBlob
+            key={`${index}-${src}-${zone.top}-${zone.left}`}
+            src={src}
+            zone={zone}
+            index={index}
+            phys={physRef.current![index]}
+            onAnchorLayout={setAnchorLayout}
+          />
+        ))}
+      </div>
     </div>
   );
 }
+
+/** Halos néon par portrait (bleu, violet, jaune, vert, orange, mauve). */
+const NEON_FILTERS: string[] = [
+  "drop-shadow(0 0 6px rgba(77, 150, 255, 1)) drop-shadow(0 0 18px rgba(77, 150, 255, 0.65))",
+  "drop-shadow(0 0 6px rgba(192, 132, 252, 1)) drop-shadow(0 0 18px rgba(192, 132, 252, 0.65))",
+  "drop-shadow(0 0 6px rgba(255, 214, 80, 1)) drop-shadow(0 0 18px rgba(255, 200, 90, 0.6))",
+  "drop-shadow(0 0 6px rgba(107, 203, 119, 1)) drop-shadow(0 0 18px rgba(107, 203, 119, 0.65))",
+  "drop-shadow(0 0 6px rgba(255, 122, 69, 1)) drop-shadow(0 0 18px rgba(255, 122, 69, 0.6))",
+  "drop-shadow(0 0 6px rgba(155, 89, 182, 1)) drop-shadow(0 0 18px rgba(155, 89, 182, 0.62))",
+];
 
 function FaceBlob({
   src,
@@ -501,7 +569,7 @@ function FaceBlob({
               width: "100%",
               height: "auto",
               display: "block",
-              filter: "drop-shadow(0 4px 14px rgba(0,0,0,0.08))",
+              filter: NEON_FILTERS[index % NEON_FILTERS.length],
               borderRadius: "50%",
               userSelect: "none",
             }}
@@ -522,8 +590,8 @@ function SmartHeadImg({
 }: {
   preferredSrc: string;
   style: CSSProperties;
-  animate: Record<string, unknown>;
-  transition: Record<string, unknown>;
+  animate: HTMLMotionProps<"img">["animate"];
+  transition: HTMLMotionProps<"img">["transition"];
 }) {
   const [src, setSrc] = useState(preferredSrc);
 

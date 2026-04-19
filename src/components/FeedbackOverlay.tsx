@@ -75,8 +75,9 @@ export function FeedbackOverlay({
             alignItems: "center",
             justifyContent: "center",
             padding: "1.25rem",
-            background: "rgba(245, 245, 247, 0.88)",
-            backdropFilter: "blur(12px)",
+            background: "rgba(255, 248, 242, 0.55)",
+            backdropFilter: "blur(16px) saturate(1.2)",
+            WebkitBackdropFilter: "blur(16px) saturate(1.2)",
           }}
         >
           <motion.div
@@ -84,21 +85,18 @@ export function FeedbackOverlay({
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.95, opacity: 0 }}
             transition={{ type: "spring", stiffness: 320, damping: 28 }}
+            className="evjf-content-shell"
             style={{
               width: "min(420px, 100%)",
               textAlign: "center",
-              borderRadius: "1.25rem",
-              padding: "1.5rem",
-              background: "var(--evjf-card)",
-              border: "1px solid var(--evjf-border)",
-              boxShadow: "var(--evjf-shadow)",
-              color: "var(--evjf-text)",
+              padding: "clamp(1.35rem, 4vw, 1.75rem)",
             }}
           >
             <h2
               id="feedback-title"
+              className="evjf-quiz-title"
               style={{
-                fontSize: "1.5rem",
+                fontSize: "clamp(1.35rem, 3.5vw, 1.5rem)",
                 margin: "0 0 1rem",
                 fontWeight: 700,
               }}
@@ -111,17 +109,15 @@ export function FeedbackOverlay({
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.06 }}
+                className="evjf-dim"
                 style={{
                   margin: "0 0 1rem",
                   fontSize: "1rem",
                   lineHeight: 1.45,
-                  color: "var(--evjf-muted)",
                 }}
               >
                 Tu as choisi :{" "}
-                <span style={{ fontWeight: 700, color: "var(--evjf-text)" }}>
-                  {chosenAnswerText}
-                </span>
+                <span style={{ fontWeight: 700, color: "var(--evjf-text)" }}>{chosenAnswerText}</span>
               </motion.p>
             )}
 
@@ -133,7 +129,7 @@ export function FeedbackOverlay({
                 borderRadius: "1rem",
                 overflow: "hidden",
                 marginBottom: "1.25rem",
-                border: "1px solid var(--evjf-border)",
+                border: "1px solid rgba(0, 31, 63, 0.1)",
               }}
             >
               <img
@@ -149,21 +145,10 @@ export function FeedbackOverlay({
             </motion.div>
             <motion.button
               type="button"
+              className="evjf-btn-primary"
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.98 }}
               onClick={onContinue}
-              style={{
-                width: "100%",
-                padding: "0.9rem 1rem",
-                fontSize: "1.05rem",
-                fontWeight: 600,
-                border: "none",
-                borderRadius: "999px",
-                cursor: "pointer",
-                color: "#fff",
-                background: "var(--evjf-accent)",
-                boxShadow: "0 4px 16px rgba(0,0,0,0.12)",
-              }}
             >
               {continueLabel}
             </motion.button>

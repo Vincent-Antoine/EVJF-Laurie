@@ -5,13 +5,15 @@
 }
 
 :root {
-  --evjf-bg: #f2f2f4;
-  --evjf-text: #1d1d1f;
-  --evjf-muted: #6e6e73;
+  --evjf-text: #2a2a2d;
+  --evjf-title-navy: #001f3f;
+  --evjf-muted: #4a4a50;
   --evjf-card: #ffffff;
-  --evjf-border: #d8d8dd;
-  --evjf-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
-  --evjf-accent: #3a3a3c;
+  --evjf-border: rgba(0, 31, 63, 0.08);
+  --evjf-shadow: 0 10px 44px rgba(0, 31, 63, 0.09), 0 4px 16px rgba(255, 140, 120, 0.08);
+  --evjf-accent: #ff5722;
+  --evjf-font-display: "Playfair Display", Georgia, "Times New Roman", serif;
+  --evjf-font-body: "Montserrat", system-ui, sans-serif;
 }
 
 html {
@@ -22,10 +24,18 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
-  font-family: "Montserrat", system-ui, sans-serif;
-  background: var(--evjf-bg);
+  font-family: var(--evjf-font-body);
   color: var(--evjf-text);
   overflow-x: hidden;
+  background: linear-gradient(
+    165deg,
+    #ffd8c4 0%,
+    #fff4dc 22%,
+    #fff9f0 48%,
+    #ffe8f0 72%,
+    #ffcaba 100%
+  );
+  background-attachment: fixed;
 }
 
 #root {
@@ -34,4 +44,85 @@ body {
 
 button {
   font-family: inherit;
+}
+
+/* Coque principale : verre blanc type iOS (glassmorphism) */
+.evjf-content-shell {
+  background: rgba(255, 255, 255, 0.58);
+  -webkit-backdrop-filter: blur(26px) saturate(1.45);
+  backdrop-filter: blur(26px) saturate(1.45);
+  border-radius: 1.85rem;
+  padding: clamp(1.35rem, 4.5vw, 2rem);
+  max-width: min(520px, 100%);
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  box-shadow:
+    0 12px 40px rgba(20, 30, 60, 0.1),
+    0 1px 0 rgba(255, 255, 255, 0.95) inset,
+    0 -1px 0 rgba(255, 255, 255, 0.35) inset;
+  color: var(--evjf-text);
+}
+
+.evjf-dim {
+  color: var(--evjf-muted);
+}
+
+.evjf-body-text {
+  color: var(--evjf-text);
+}
+
+.evjf-quiz-title {
+  font-family: var(--evjf-font-display);
+  font-weight: 700;
+  color: var(--evjf-title-navy);
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+}
+
+.evjf-quiz-sub {
+  font-family: var(--evjf-font-body);
+  color: var(--evjf-muted);
+  font-weight: 500;
+}
+
+.evjf-question-prompt {
+  font-family: var(--evjf-font-body);
+  font-weight: 700;
+  color: var(--evjf-title-navy);
+  letter-spacing: 0.01em;
+  line-height: 1.4;
+}
+
+.evjf-card-panel {
+  background: var(--evjf-card);
+  border-radius: 1.5rem;
+  border: 1px solid var(--evjf-border);
+  box-shadow: var(--evjf-shadow);
+}
+
+.evjf-btn-primary {
+  width: 100%;
+  padding: 0.95rem 1.25rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  color: #fff;
+  background: var(--evjf-accent);
+  box-shadow: 0 4px 18px rgba(255, 87, 34, 0.35);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.evjf-btn-primary:hover {
+  box-shadow: 0 6px 24px rgba(255, 87, 34, 0.45);
+}
+
+.evjf-option-pill {
+  text-align: left;
+  border-radius: 999px;
+  padding: 0.95rem 1.2rem;
+  font-size: 0.95rem;
+  line-height: 1.45;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, box-shadow 0.15s, transform 0.15s;
 }

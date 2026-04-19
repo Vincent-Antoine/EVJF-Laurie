@@ -17,6 +17,13 @@ import {
 const IMG_GOOD = "/upload/good_two.png";
 const IMG_BAD = "/upload/bad_two.png";
 
+/** Pilules vert / bleu / violet + fond léger (inchangé). */
+const OPTION_PILL_STYLES: { border: string; background: string }[] = [
+  { border: "2px solid #22b86a", background: "rgba(34, 184, 106, 0.14)" },
+  { border: "2px solid #3b82f6", background: "rgba(59, 130, 246, 0.12)" },
+  { border: "2px solid #9333ea", background: "rgba(147, 51, 234, 0.11)" },
+];
+
 function answerDetail(q: Question, choiceIndex: number): QuestionAnswerDetail {
   return {
     questionId: q.id,
@@ -181,233 +188,224 @@ export default function QuizPage() {
       style={{
         position: "relative",
         zIndex: 10,
-        width: "min(520px, 100%)",
+        width: "100%",
+        maxWidth: "min(520px, 100%)",
         margin: "0 auto",
-        padding: "clamp(1.25rem, 4vw, 2rem)",
+        padding: "clamp(1rem, 4vw, 1.75rem)",
       }}
     >
-      <motion.header
-        initial={{ opacity: 0, y: -12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1, duration: 0.5 }}
-        style={{ textAlign: "center", marginBottom: "1.75rem" }}
-      >
-        <div
-          style={{
-            display: "inline-block",
-            fontSize: "clamp(1.75rem, 5vw, 2.35rem)",
-            fontWeight: 700,
-            letterSpacing: "0.02em",
-            color: "var(--evjf-text)",
-          }}
-        >
-          Qu'as-tu compris de nos petites histoires contées par mail ces dernières semaines ?{" "}
-        </div>
-        <p
-          style={{
-            margin: "0.75rem 0 0",
-            color: "var(--evjf-muted)",
-            fontSize: "1.02rem",
-            lineHeight: 1.45,
-          }}
-        >
-          Quatre questions, trois choix, une seule tentative par question — et une seule partie
-          pour toi. Attention retient bien tes réponses.
-        </p>
-      </motion.header>
-
-      {!started && !blocked && !finished && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.96 }}
-          animate={{ opacity: 1, scale: 1 }}
-          style={{
-            borderRadius: "1.25rem",
-            padding: "1.75rem",
-            background: "var(--evjf-card)",
-            border: "1px solid var(--evjf-border)",
-            boxShadow: "var(--evjf-shadow)",
-          }}
-        >
-          <p style={{ marginTop: 0, lineHeight: 1.5, color: "var(--evjf-text)" }}>
-            Prête ? Une fois lancée, tu ne pourras pas recommencer le quiz depuis cet appareil.
-          </p>
-          <motion.button
-            type="button"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={handleStart}
-            style={{
-              marginTop: "1rem",
-              width: "100%",
-              padding: "0.95rem",
-              fontSize: "1.05rem",
-              fontWeight: 600,
-              border: "none",
-              borderRadius: "999px",
-              cursor: "pointer",
-              color: "#fff",
-              background: "var(--evjf-accent)",
-            }}
-          >
-            Commencer
-          </motion.button>
-        </motion.div>
-      )}
-
-      {started && !finished && q && (
-        <motion.section
-          key={q.id}
-          initial={{ opacity: 0, x: 24 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.45 }}
-          style={{
-            borderRadius: "1.25rem",
-            padding: "1.5rem",
-            background: "var(--evjf-card)",
-            border: "1px solid var(--evjf-border)",
-            boxShadow: "var(--evjf-shadow)",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "baseline",
-              marginBottom: "1rem",
-              gap: "0.75rem",
-            }}
-          >
-            <span style={{ fontSize: "0.85rem", color: "var(--evjf-muted)" }}>
-              Question {questionIndex + 1} / {QUESTIONS.length}
-            </span>
-            <span style={{ fontSize: "0.85rem", color: "var(--evjf-muted)" }}>
-              Score : {score}
-            </span>
-          </div>
-          <h1
-            style={{
-              fontSize: "1.2rem",
-              fontWeight: 600,
-              margin: "0 0 1.25rem",
-              lineHeight: 1.35,
-            }}
-          >
-            {q.prompt}
-          </h1>
-          <div style={{ display: "flex", flexDirection: "column", gap: "0.65rem" }}>
-            {q.options.map((label, idx) => {
-              const disabled = answeredForStep || !!feedback;
-              return (
-                <motion.button
-                  key={idx}
-                  type="button"
-                  whileHover={disabled ? undefined : { x: 4 }}
-                  whileTap={disabled ? undefined : { scale: 0.99 }}
-                  disabled={disabled}
-                  onClick={() => handlePick(idx)}
-                  style={{
-                    textAlign: "left",
-                    padding: "0.85rem 1rem",
-                    borderRadius: "0.85rem",
-                    border: "1px solid var(--evjf-border)",
-                    background: disabled ? "#f5f5f7" : "#fafafa",
-                    color: "var(--evjf-text)",
-                    fontSize: "1rem",
-                    cursor: disabled ? "default" : "pointer",
-                    opacity: disabled ? 0.55 : 1,
-                  }}
-                >
-                  {label}
-                </motion.button>
-              );
-            })}
-          </div>
-        </motion.section>
-      )}
-
-      {finished && (
-        <motion.section
-          initial={{ opacity: 0, y: 16 }}
+      <div className="evjf-content-shell" style={{ position: "relative" }}>
+        <motion.header
+          initial={{ opacity: 0, y: -12 }}
           animate={{ opacity: 1, y: 0 }}
-          style={{
-            borderRadius: "1.25rem",
-            padding: "1.75rem",
-            background: "var(--evjf-card)",
-            border: "1px solid var(--evjf-border)",
-            boxShadow: "var(--evjf-shadow)",
-            textAlign: "center",
-          }}
+          transition={{ delay: 0.1, duration: 0.5 }}
+          style={{ textAlign: "center", marginBottom: 0 }}
         >
-          <h2
+          <h1
+            className="evjf-quiz-title"
             style={{
-              fontSize: "1.6rem",
-              margin: "0 0 0.75rem",
-              fontWeight: 700,
+              margin: 0,
+              maxWidth: "28ch",
+              marginLeft: "auto",
+              marginRight: "auto",
+              fontSize: "clamp(1.15rem, 4.2vw, 1.55rem)",
             }}
           >
-            C’est dans la boîte !
-          </h2>
-          <p style={{ fontSize: "1.15rem", margin: "0 0 1rem", fontWeight: 600 }}>
-            Ton score : {score} / {QUESTIONS.length}
+            Qu'as-tu compris de nos petites histoires contées par mail ces dernières semaines ?
+          </h1>
+          <p
+            className="evjf-quiz-sub"
+            style={{
+              margin: "1rem 0 0",
+              fontSize: "clamp(0.88rem, 2.3vw, 0.98rem)",
+              lineHeight: 1.55,
+              maxWidth: "38rem",
+              marginLeft: "auto",
+              marginRight: "auto",
+            }}
+          >
+            Quatre questions, trois choix, une seule tentative par question — et une seule partie
+            pour toi. Attention retient bien tes réponses.
           </p>
-          <p style={{ margin: 0, lineHeight: 1.55, color: "var(--evjf-muted)" }}>
-            {finalMessage(score)}
-          </p>
-          {mailStatus === "sending" && (
-            <p style={{ margin: "1rem 0 0", fontSize: "0.95rem", color: "var(--evjf-muted)" }}>
-              Envoi du récapitulatif à l’organisateur…
-            </p>
-          )}
-          {mailStatus === "sent" && (
-            <p style={{ margin: "1rem 0 0", fontSize: "0.95rem", color: "var(--evjf-muted)" }}>
-              Le détail de ta partie a été envoyé par e-mail à tes superbes témoins.
-            </p>
-          )}
-          {mailStatus === "error" && (
-            <p style={{ margin: "1rem 0 0", fontSize: "0.92rem", color: "#b91c1c" }}>
-              L’envoi automatique a échoué (réseau ou blocage). Préviens l’organisateur si besoin.
-            </p>
-          )}
-        </motion.section>
-      )}
+        </motion.header>
 
-      {blocked && (
-        <motion.section
-          initial={{ opacity: 0, scale: 0.97 }}
-          animate={{ opacity: 1, scale: 1 }}
-          style={{
-            borderRadius: "1.25rem",
-            padding: "1.75rem",
-            background: "var(--evjf-card)",
-            border: "1px solid var(--evjf-border)",
-            boxShadow: "var(--evjf-shadow)",
-            textAlign: "center",
-          }}
-        >
-          <h2
+        {!started && !blocked && !finished && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15, duration: 0.45 }}
+            style={{ marginTop: "1.5rem" }}
+          >
+            <p
+              className="evjf-body-text"
+              style={{ margin: 0, lineHeight: 1.55, textAlign: "center", fontWeight: 500 }}
+            >
+              Prête ? Une fois lancée, tu ne pourras pas recommencer le quiz depuis cet appareil.
+            </p>
+            <motion.button
+              type="button"
+              className="evjf-btn-primary"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={handleStart}
+              style={{ marginTop: "1.15rem" }}
+            >
+              Commencer
+            </motion.button>
+          </motion.div>
+        )}
+
+        {started && !finished && q && (
+          <motion.section
+            key={q.id}
+            initial={{ opacity: 0, x: 16 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.4 }}
             style={{
-              fontSize: "1.5rem",
-              margin: "0 0 0.75rem",
-              fontWeight: 700,
+              marginTop: "1.5rem",
+              paddingTop: "1.5rem",
+              borderTop: "1px solid rgba(0, 31, 63, 0.1)",
             }}
           >
-            Tu as déjà joué
-          </h2>
-          <p style={{ margin: 0, lineHeight: 1.55, color: "var(--evjf-muted)" }}>
-            Une seule tentative est autorisée.
-            {typeof localStorage.getItem("evjf_quiz_v1_score") === "string" && (
-              <>
-                {" "}
-                Ton dernier score enregistré :{" "}
-                <strong>
-                  {localStorage.getItem("evjf_quiz_v1_score")} / {QUESTIONS.length}
-                </strong>
-                .
-              </>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "baseline",
+                marginBottom: "1.05rem",
+                gap: "0.75rem",
+                fontSize: "0.82rem",
+                color: "var(--evjf-muted)",
+                fontWeight: 600,
+              }}
+            >
+              <span>
+                Question {questionIndex + 1} / {QUESTIONS.length}
+              </span>
+              <span>Score : {score}</span>
+            </div>
+            <p
+              className="evjf-question-prompt"
+              style={{
+                fontSize: "clamp(0.98rem, 2.8vw, 1.1rem)",
+                margin: "0 0 1.15rem",
+              }}
+            >
+              {q.prompt}
+            </p>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.7rem" }}>
+              {q.options.map((label, idx) => {
+                const disabled = answeredForStep || !!feedback;
+                const pill = OPTION_PILL_STYLES[idx % OPTION_PILL_STYLES.length];
+                return (
+                  <motion.button
+                    key={idx}
+                    type="button"
+                    className="evjf-option-pill"
+                    whileHover={disabled ? undefined : { x: 4 }}
+                    whileTap={disabled ? undefined : { scale: 0.99 }}
+                    disabled={disabled}
+                    onClick={() => handlePick(idx)}
+                    style={{
+                      border: disabled ? "2px solid rgba(0, 31, 63, 0.12)" : pill.border,
+                      background: disabled ? "rgba(0, 31, 63, 0.045)" : pill.background,
+                      color: "var(--evjf-text)",
+                      cursor: disabled ? "default" : "pointer",
+                      opacity: disabled ? 0.52 : 1,
+                      fontWeight: 500,
+                      boxShadow: disabled ? "none" : "0 1px 3px rgba(0, 31, 63, 0.06)",
+                    }}
+                  >
+                    {label}
+                  </motion.button>
+                );
+              })}
+            </div>
+          </motion.section>
+        )}
+
+        {finished && (
+          <motion.section
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            style={{
+              marginTop: "1.5rem",
+              paddingTop: "1.5rem",
+              borderTop: "1px solid rgba(0, 31, 63, 0.1)",
+              textAlign: "center",
+            }}
+          >
+            <h2
+              className="evjf-quiz-title"
+              style={{
+                fontSize: "clamp(1.25rem, 3.8vw, 1.5rem)",
+                margin: "0 0 0.65rem",
+                fontWeight: 700,
+              }}
+            >
+              C’est dans la boîte !
+            </h2>
+            <p className="evjf-body-text" style={{ fontSize: "1.05rem", margin: "0 0 0.85rem", fontWeight: 600 }}>
+              Ton score : {score} / {QUESTIONS.length}
+            </p>
+            <p className="evjf-dim" style={{ margin: 0, lineHeight: 1.55 }}>
+              {finalMessage(score)}
+            </p>
+            {mailStatus === "sending" && (
+              <p className="evjf-dim" style={{ margin: "1rem 0 0", fontSize: "0.92rem" }}>
+                Envoi du récapitulatif à l’organisateur…
+              </p>
             )}
-          </p>
-        </motion.section>
-      )}
+            {mailStatus === "sent" && (
+              <p className="evjf-dim" style={{ margin: "1rem 0 0", fontSize: "0.92rem" }}>
+                Le détail de ta partie a été envoyé par e-mail à tes superbes témoins.
+              </p>
+            )}
+            {mailStatus === "error" && (
+              <p style={{ margin: "1rem 0 0", fontSize: "0.9rem", color: "#b91c1c" }}>
+                L’envoi automatique a échoué (réseau ou blocage). Préviens l’organisateur si besoin.
+              </p>
+            )}
+          </motion.section>
+        )}
+
+        {blocked && (
+          <motion.section
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            style={{
+              marginTop: "1.5rem",
+              paddingTop: "1.5rem",
+              borderTop: "1px solid rgba(0, 31, 63, 0.1)",
+              textAlign: "center",
+            }}
+          >
+            <h2
+              className="evjf-quiz-title"
+              style={{
+                fontSize: "clamp(1.2rem, 3.5vw, 1.4rem)",
+                margin: "0 0 0.65rem",
+                fontWeight: 700,
+              }}
+            >
+              Tu as déjà joué
+            </h2>
+            <p className="evjf-dim" style={{ margin: 0, lineHeight: 1.55 }}>
+              Une seule tentative est autorisée.
+              {typeof localStorage.getItem("evjf_quiz_v1_score") === "string" && (
+                <>
+                  {" "}
+                  Ton dernier score enregistré :{" "}
+                  <strong style={{ color: "var(--evjf-text)" }}>
+                    {localStorage.getItem("evjf_quiz_v1_score")} / {QUESTIONS.length}
+                  </strong>
+                  .
+                </>
+              )}
+            </p>
+          </motion.section>
+        )}
+      </div>
     </motion.main>
   );
 
